@@ -11,7 +11,7 @@ proporcao_inicial = 0.2      # quantidade inicial de alunos atentos
 influencia_vizinhos = 3      # influência ds vizinhos
 Ts = 5                       # tempo de saturação
 pd = 0.3                     # probabilidade de reinício com intervenção docente
-iteracoes = 20               # número de iterações (1 aula)
+iteracoes = 2000               # número de iterações (1 aula)
 
 movimentos = [
     (-1, -1), (-1, 0), (-1, 1),
@@ -34,6 +34,9 @@ for posicao_grade in indices:
     j = posicao_grade % n
     grade[i, j] = 1
 
+# inclusão professor
+prof_i, prof_j = n // 2, n // 2
+
 # contagem de vizinhos atentos (moore)
 
 def contar_atentos(grade, i, j):
@@ -52,11 +55,18 @@ historico_0 = []
 historico_1 = []
 historico_2 = []
 historico_grades = []
+historico_prof = []
 
 # loop de iterações e transições do autômato
 
 for t in range(iteracoes):
     nova_grade = grade.copy()
+
+    di, dj = random.choice(movimentos)
+    prox_passo_i = prof_i + di
+    prox_passo_j = prof_j + dj
+
+    prof_i, prof_j = prox_passo_i, prox_passo_j
 
     for i in range(n):
         for j in range(n):
@@ -90,6 +100,7 @@ for t in range(iteracoes):
     historico_1.append(np.sum(grade == 1))
     historico_2.append(np.sum(grade == 2))
     historico_grades.append(grade.copy()) # estado da grade (espacial)
+    historico_prof.append((prof_i, prof_j))
 
 # resultado da última iteração
 
@@ -108,6 +119,7 @@ cmap = ListedColormap(['lightgray', 'green', 'red'])
 
 plt.figure(figsize=(6, 6))
 plt.imshow(grade, cmap=cmap)
+plt.scatter(prof_j, prof_i, c='blue', s=150, label='Professor')
 plt.title("Resultado da última iteração")
 plt.axis('off')
 plt.show()
@@ -128,13 +140,15 @@ plt.show()
 
 fig, ax = plt.subplots(figsize=(6, 6))
 img = ax.imshow(historico_grades[0], cmap=cmap, vmax=2)
+prof_plot = ax.scatter([], [], c='blue', s=100)
 ax.axis('off')
 
 def atualizar(frame):
     img.set_array(historico_grades[frame])
+    pi, pj = historico_prof[frame]
+    prof_plot.set_offsets([[pj, pi]])
     ax.set_title(f"Iteração {frame}")
-
-    return img, 
+    return img, prof_plot
 
 ani = animation.FuncAnimation(
     fig,
