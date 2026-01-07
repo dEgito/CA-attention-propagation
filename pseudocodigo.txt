@@ -1,0 +1,25 @@
+Inicializar grade N x N
+Inicializar estados das células conforme configuração inicial (ρ0)
+Inicializar contador de tempo de atenção para cada célula
+
+Para cada iteração t:
+    Para cada célula (i, j):
+        Contar número de vizinhos atentos A(i, j)
+
+        Se estado == 0 (desatenção):
+            Se A(i, j) ≥ θ:
+                próximo_estado = 1
+                resetar contador de atenção
+
+        Se estado == 1 (atenção):
+            incrementar contador de atenção
+            Se contador ≥ Ts:
+                próximo_estado = 2
+                resetar contador
+
+        Se estado == 2 (saturação):
+            Com probabilidade pd:
+                próximo_estado = 0
+
+    Atualizar todos os estados simultaneamente
+    Registrar métricas globais (proporção de cada estado)
