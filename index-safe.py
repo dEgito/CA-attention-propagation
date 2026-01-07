@@ -123,7 +123,7 @@ plt.show()
 # animação da evolução
 
 fig, ax = plt.subplots(figsize=(6, 6))
-img = ax.imshow(historico_grades[0], cmap=cmap, vmax=2)
+img = ax.imshow(historico_grades[0], cmap=cmap)
 ax.axis('off')
 
 def atualizar(frame):

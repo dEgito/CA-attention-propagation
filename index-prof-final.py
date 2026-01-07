@@ -13,6 +13,11 @@ Ts = 5                       # tempo de saturação
 pd = 0.3                     # probabilidade de reinício com intervenção docente
 iteracoes = 20               # número de iterações (1 aula)
 
+passos_moore = [(-1, -1), (-1, 0), (-1, 1),
+                ( 0, -1),          ( 0, 1),
+                ( 1, -1), ( 1, 0), ( 1, 1)]
+
+
 # geração da grade NxN
 grade = np.zeros((n, n), dtype=int)
 
@@ -32,14 +37,11 @@ for posicao_grade in indices:
 
 def contar_atentos(grade, i, j):
     contagem = 0
-    for di in [-1, 0, 1]:
-        for dj in [-1, 0, 1]:
-            if di == 0 and dj == 0:
-                continue
-            ni, nj = i + di, j + dj
-            if 0 <= ni < n and 0 <= nj < n:
-                if grade[ni, nj] == 1:
-                    contagem += 1
+    for di, dj in passos_moore:
+        ni, nj = i + di, j + dj
+        if 0 <= ni < n and 0 <= nj < n:
+            if grade[ni, nj] == 1:
+                contagem += 1
     return contagem
 
 
@@ -123,7 +125,7 @@ plt.show()
 # animação da evolução
 
 fig, ax = plt.subplots(figsize=(6, 6))
-img = ax.imshow(historico_grades[0], cmap=cmap, vmax=2)
+img = ax.imshow(historico_grades[0], cmap=cmap)
 ax.axis('off')
 
 def atualizar(frame):
