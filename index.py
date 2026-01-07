@@ -119,3 +119,25 @@ plt.ylabel("Número de estudantes")
 plt.title("Evolução dos estados ao longo das iterações")
 plt.grid(True)
 plt.show()
+
+# animação da evolução
+
+fig, ax = plt.subplots(figsize=(6, 6))
+img = ax.imshow(historico_grades[0], cmap=cmap)
+ax.axis('off')
+
+def atualizar(frame):
+    img.set_array(historico_grades[frame])
+    ax.set_title(f"Iteração {frame}")
+
+    return img, 
+
+ani = animation.FuncAnimation(
+    fig,
+    atualizar,
+    frames=len(historico_grades),
+    interval=150,
+    repeat=False
+)
+
+plt.show()
