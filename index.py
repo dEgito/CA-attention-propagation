@@ -13,6 +13,12 @@ Ts = 5                       # tempo de saturação
 pd = 0.3                     # probabilidade de reinício com intervenção docente
 iteracoes = 20               # número de iterações (1 aula)
 
+movimentos = [
+    (-1, -1), (-1, 0), (-1, 1),
+    ( 0, -1),          ( 0, 1),
+    ( 1, -1), ( 1, 0), ( 1, 1)
+]
+
 # geração da grade NxN
 grade = np.zeros((n, n), dtype=int)
 
@@ -32,14 +38,11 @@ for posicao_grade in indices:
 
 def contar_atentos(grade, i, j):
     contagem = 0
-    for di in [-1, 0, 1]:
-        for dj in [-1, 0, 1]:
-            if di == 0 and dj == 0:
-                continue
-            ni, nj = i + di, j + dj
-            if 0 <= ni < n and 0 <= nj < n:
-                if grade[ni, nj] == 1:
-                    contagem += 1
+    for di, dj in movimentos:
+        ni, nj = i + di, j + dj
+        if 0 <= ni < n and 0 <= nj < n:
+            if grade[ni, nj] == 1:
+                contagem += 1
     return contagem
 
 
@@ -49,6 +52,7 @@ historico_0 = []
 historico_1 = []
 historico_2 = []
 historico_grades = []
+
 # loop de iterações e transições do autômato
 
 for t in range(iteracoes):
