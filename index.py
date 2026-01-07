@@ -42,6 +42,13 @@ def contar_atentos(grade, i, j):
                     contagem += 1
     return contagem
 
+
+# registro das métricas do sistema (global)
+
+historico_0 = []
+historico_1 = []
+historico_2 = []
+historico_grades = []
 # loop de iterações e transições do autômato
 
 for t in range(iteracoes):
@@ -74,13 +81,6 @@ for t in range(iteracoes):
     # atualização síncrona das células
     grade = nova_grade
 
-    # registro das métricas do sistema (global)
-
-    historico_0 = []
-    historico_1 = []
-    historico_2 = []
-    historico_grades = []
-
     # métricas globais
     historico_0.append(np.sum(grade == 0))
     historico_1.append(np.sum(grade == 1))
@@ -106,4 +106,16 @@ plt.figure(figsize=(6, 6))
 plt.imshow(grade, cmap=cmap)
 plt.title("Resultado da última iteração")
 plt.axis('off')
+plt.show()
+
+# gráfico de linha: variação dos estados dos alunos x iterações
+
+plt.figure(figsize=(8, 5))
+plt.plot(historico_0, label='Desatenção (0)')
+plt.plot(historico_1, label='Atenção (1)')
+plt.plot(historico_2, label='Saturação (2)')
+plt.xlabel("Iterações (tempo)")
+plt.ylabel("Número de estudantes")
+plt.title("Evolução dos estados ao longo das iterações")
+plt.grid(True)
 plt.show()
