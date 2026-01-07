@@ -11,7 +11,9 @@ proporcao_inicial = 0.2      # quantidade inicial de alunos atentos
 influencia_vizinhos = 3      # influência ds vizinhos
 Ts = 5                       # tempo de saturação
 pd = 0.3                     # probabilidade de reinício com intervenção docente
-iteracoes = 2000               # número de iterações (1 aula)
+iteracoes = 20               # número de iterações (1 aula)
+
+influencia_professor = 1 # alcance de influência
 
 movimentos = [
     (-1, -1), (-1, 0), (-1, 1),
@@ -63,10 +65,18 @@ for t in range(iteracoes):
     nova_grade = grade.copy()
 
     di, dj = random.choice(movimentos)
-    prox_passo_i = prof_i + di
-    prox_passo_j = prof_j + dj
+    prof_i = min(max(prof_i + di, 0), n - 1)
+    prof_j = min(max(prof_j + dj, 0), n - 1)
 
-    prof_i, prof_j = prox_passo_i, prox_passo_j
+    
+    for di in range(-influencia_professor, influencia_professor + 1):
+        for dj in range(-influencia_professor, influencia_professor + 1):
+            ni = prof_i + di
+            nj = prof_j + dj
+            if 0 <= ni < n and 0 <= nj < n:
+                # transforma em atento (1)
+                nova_grade[ni, nj] = 1
+                tempo_atencao[ni, nj] = 0
 
     for i in range(n):
         for j in range(n):
@@ -118,7 +128,7 @@ print("Saturados:", historico_2[-1])
 cmap = ListedColormap(['lightgray', 'green', 'red'])
 
 plt.figure(figsize=(6, 6))
-plt.imshow(grade, cmap=cmap)
+plt.imshow(grade, cmap=cmap, vmax=2)
 plt.scatter(prof_j, prof_i, c='blue', s=150, label='Professor')
 plt.title("Resultado da última iteração")
 plt.axis('off')
@@ -154,7 +164,7 @@ ani = animation.FuncAnimation(
     fig,
     atualizar,
     frames=len(historico_grades),
-    interval=150,
+    interval=300,
     repeat=False
 )
 
