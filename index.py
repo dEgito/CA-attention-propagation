@@ -1,6 +1,10 @@
 import numpy as np
 import random
 
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+from matplotlib import animation
+
 # parâmetros base
 n = 20                       # tamanho da grade (NxN)
 proporcao_inicial = 0.2      # quantidade inicial de alunos atentos
@@ -89,3 +93,17 @@ print("Última iteração:")
 print("Desatentos:", historico_0[-1])
 print("Atentos:", historico_1[-1])
 print("Saturados:", historico_2[-1])
+
+
+###########################
+## VISUALIZAÇÃO DO PROCESSO
+
+# resultado da última iteração
+
+cmap = ListedColormap(['lightgray', 'green', 'red'])
+
+plt.figure(figsize=(6, 6))
+plt.imshow(grade, cmap=cmap)
+plt.title("Resultado da última iteração")
+plt.axis('off')
+plt.show()
