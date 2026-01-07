@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 # parâmetros base
-n = 30                       # tamanho da grade (NxN)
+n = 20                       # tamanho da grade (NxN)
 proporcao_inicial = 0.2      # quantidade inicial de alunos atentos
 influencia_vizinhos = 3      # influência ds vizinhos
 Ts = 5                       # tempo de saturação
@@ -17,7 +17,7 @@ tempo_atencao = np.zeros((n, n), dtype=int)
 
 # geração alunos atentos inicial
 num_estado_1 = int(proporcao_inicial * n * n)
-indices = np.random.choice(n * n, num_estado_1)
+indices = np.random.choice(n * n, num_estado_1, replace=False)
 
 for posicao_grade in indices:
     i = posicao_grade // n
