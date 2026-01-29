@@ -13,6 +13,8 @@ Ts = 5                       # tempo de saturação
 pd = 0.3                     # probabilidade de reinício com intervenção docente
 iteracoes = 20               # número de iterações (1 aula)
 
+influencia_professor = 1 # alcance de influência
+
 movimentos = [
     (-1, -1), (-1, 0), (-1, 1),
     ( 0, -1),          ( 0, 1),
@@ -34,6 +36,8 @@ for posicao_grade in indices:
     j = posicao_grade % n
     grade[i, j] = 1
 
+# inclusão professor
+prof_i, prof_j = n // 2, n // 2
 
 # contagem de vizinhos atentos (moore)
 
@@ -53,11 +57,26 @@ historico_0 = []
 historico_1 = []
 historico_2 = []
 historico_grades = []
+historico_prof = []
 
 # loop de iterações e transições do autômato
 
 for t in range(iteracoes):
     nova_grade = grade.copy()
+
+    di, dj = random.choice(movimentos)
+    prof_i = min(max(prof_i + di, 0), n - 1)
+    prof_j = min(max(prof_j + dj, 0), n - 1)
+
+    
+    for di in range(-influencia_professor, influencia_professor + 1):
+        for dj in range(-influencia_professor, influencia_professor + 1):
+            ni = prof_i + di
+            nj = prof_j + dj
+            if 0 <= ni < n and 0 <= nj < n:
+                # transforma em atento (1)
+                nova_grade[ni, nj] = 1
+                tempo_atencao[ni, nj] = 0
 
     for i in range(n):
         for j in range(n):
@@ -91,6 +110,7 @@ for t in range(iteracoes):
     historico_1.append(np.sum(grade == 1))
     historico_2.append(np.sum(grade == 2))
     historico_grades.append(grade.copy()) # estado da grade (espacial)
+    historico_prof.append((prof_i, prof_j))
 
 # resultado da última iteração
 
@@ -109,6 +129,7 @@ cmap = ListedColormap(['lightgray', 'green', 'red'])
 
 plt.figure(figsize=(6, 6))
 plt.imshow(grade, cmap=cmap, vmax=2)
+plt.scatter(prof_j, prof_i, c='blue', s=150, label='Professor')
 plt.title("Resultado da última iteração")
 plt.axis('off')
 plt.show()
@@ -135,6 +156,8 @@ ax.axis('off')
 
 def atualizar(frame):
     img.set_array(historico_grades[frame])
+    pi, pj = historico_prof[frame]
+    prof_plot.set_offsets([[pj, pi]])
     ax.set_title(f"Iteração {frame}")
     return img, prof_plot
 
