@@ -1,5 +1,5 @@
 Inicializar grade N x N
-Inicializar estados das células conforme configuração inicial (ρ0)
+Inicializar estados das células conforme configuração inicial (p0)
 Inicializar contador de tempo de atenção para cada célula
 
 Para cada iteração t:

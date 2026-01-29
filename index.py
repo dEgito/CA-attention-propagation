@@ -143,6 +143,7 @@ plt.plot(historico_2, label='Saturação (2)')
 plt.xlabel("Iterações (tempo)")
 plt.ylabel("Número de estudantes")
 plt.title("Evolução dos estados ao longo das iterações")
+plt.legend(title="Estados do modelo")
 plt.grid(True)
 plt.show()
 
